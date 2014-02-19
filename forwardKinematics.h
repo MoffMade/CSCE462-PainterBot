@@ -32,6 +32,7 @@ private:
 public:
 	T_Matrix();
 	T_Matrix(int org, int des, DH_Param dh);
+	void calcMatrix(DH_Param dh);
 	double get(int r, int c) const;
 	int getOrg() const;
 	int getDes() const;
@@ -49,5 +50,8 @@ public:
 	f_kin_solver_3dof();
 	f_kin_solver_3dof(DH_Param L1, DH_Param L2,DH_Param L3);
 	void printSolver();
+	void updateTMatrices();
+	int updateTheta(int link, double newTheta);
+	int updateBaseSlider(double newSliderPos);
 };
 

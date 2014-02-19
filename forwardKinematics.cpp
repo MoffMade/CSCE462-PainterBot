@@ -18,6 +18,9 @@ T_Matrix::T_Matrix(int org, int des, DH_Param dh){
 	destination_frame=des;
 	//Init basic T-Matrix using DH Parameter values (alpha, a, d, theta)
 	//Angles are in RADIANS
+	calcMatrix(dh);
+};
+void T_Matrix::calcMatrix(DH_Param dh){
 	matrix[0][0]=cos(dh.theta);
 	matrix[0][1]=-sin(dh.theta);
 	matrix[0][2]=0;
@@ -101,4 +104,36 @@ void f_kin_solver_3dof::printSolver(){
 	T12.printMatrix();
 	T23.printMatrix();
 	FK_Transform.printMatrix();
+};
+
+void f_kin_solver_3dof::updateTMatrices(){
+	T01.calcMatrix(DH_Parameters[0]);
+	T12.calcMatrix(DH_Parameters[1]);
+	T23.calcMatrix(DH_Parameters[2]);
+
+	T_Matrix T02;
+	T02.T_Mat_multiply(T01,T12);
+	FK_Transform.T_Mat_multiply(T02,T23);
+};
+int f_kin_solver_3dof::updateTheta(int link, double newTheta){
+	if(link<=0||link>=4){
+		//force link to 1, 2, or 3
+		return 1;
+	}
+	else{
+		DH_Parameters[link-1].theta=degree2rad(newTheta);
+		updateTMatrices();
+		return 0;
+	}
+};
+int f_kin_solver_3dof::updateBaseSlider(double newSliderPos){
+	if(newSliderPos<0||newSliderPos>300){
+		//force link to 1, 2, or 3
+		return 1;
+	}
+	else{
+		DH_Parameters[0].a=newSliderPos;
+		updateTMatrices();
+		return 0;
+	}
 };
