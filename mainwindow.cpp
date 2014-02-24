@@ -2,11 +2,6 @@
 #include "ui_mainwindow.h"
 //#include kinematics, i assume
 
-static const QPoint AXIS_1_START_POINT = QPoint(0,0);
-static const QPoint AXIS_2_START_POINT = QPoint(0,150);
-static const QPoint AXIS_3_START_POINT = QPoint(0,250);
-static const QPoint AXIS_PAINT_BRUSH_START_POINT = QPoint(0,315);
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -29,11 +24,11 @@ MainWindow::MainWindow(QWidget *parent) :
     link_pen.setWidthF(10);                 //line width
 
     //draw links; add lines to the scene in their initial positions
-    scene->addLine(0,0,0,150,link_pen);   //150 pixels long
+    m_link1 = scene->addLine(0,0,0,150,link_pen);     //150 pixels long
     link_pen.setColor(Qt::blue);
-    scene->addLine(0,150,0,250,link_pen);   //100 pixels long
+    m_link2 = scene->addLine(0,150,0,250,link_pen);   //100 pixels long
     link_pen.setColor(Qt::red);
-    scene->addLine(0,250,0,315, link_pen);
+    m_link3 = scene->addLine(0,250,0,315, link_pen);  //75 pixels long
 
     //add scene to the QGraphicsView
     //the following line is needed to tell the QGraphicsView where to center its view. otherwise, it is centered on the collective center of objects in the scene.
@@ -43,11 +38,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->scale(1,-1);
     ui->graphicsView->setScene(scene);
 
-
     //connect signals and slots
-    connect(ui->horizontalSlider,SIGNAL(sliderMoved(int)),this,SLOT(on_horizontalSlider_valueChanged(int)));
-    connect(ui->horizontalSlider_2,SIGNAL(sliderMoved(int)),this,SLOT(on_horizontalSlider_2_valueChanged(int)));
-    connect(ui->horizontalSlider_3,SIGNAL(sliderMoved(int)),this,SLOT(on_horizontalSlider_3_valueChanged(int)));
+    connect(ui->horizontalSlider,SIGNAL(sliderMoved(int)),this,SLOT(on_horizontalSlider_sliderMoved(int)));
+    connect(ui->horizontalSlider_2,SIGNAL(sliderMoved(int)),this,SLOT(on_horizontalSlider_2_sliderMoved(int)));
+    connect(ui->horizontalSlider_3,SIGNAL(sliderMoved(int)),this,SLOT(on_horizontalSlider_3_sliderMoved(int)));
 
 }
 
@@ -57,7 +51,7 @@ MainWindow::~MainWindow()
 }
 
 //slider for link 1
-void MainWindow::on_horizontalSlider_valueChanged(int value)
+void MainWindow::on_horizontalSlider_sliderMoved(int position)
 {
     //tell new value of link 1 location according to value
     //ask for location of link 1
@@ -98,5 +92,5 @@ void MainWindow::on_pushButton_clicked()
 }
 
 void MainWindow::paint(){
-
+    //add tiny ellipse at the m_link3's (x2,y2);
 }

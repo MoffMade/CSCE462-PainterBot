@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QtGui>
 
 namespace Ui {
 class MainWindow;
@@ -16,7 +17,7 @@ public:
     ~MainWindow();
     
 private slots:
-    void on_horizontalSlider_valueChanged(int value);
+    void on_horizontalSlider_sliderMoved(int value);
 
     void on_horizontalSlider_2_sliderMoved(int position);
 
@@ -27,7 +28,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    QLineF * m_link1, m_link2, m_link3;
+    QGraphicsLineItem * m_link1, * m_link2, * m_link3;
 
     void paint();
 };
