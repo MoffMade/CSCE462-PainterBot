@@ -17,18 +17,27 @@ public:
     ~MainWindow();
     
 private slots:
-    void on_horizontalSlider_sliderMoved(int value);
-
-    void on_horizontalSlider_2_sliderMoved(int position);
-
-    void on_horizontalSlider_3_sliderMoved(int position);
 
     void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_6_clicked();
+
+    void on_pushButton_7_clicked();
+
+    void on_pushButton_8_clicked();
+
+    void on_pushButton_9_clicked();
 
 private:
     Ui::MainWindow *ui;
 
     QGraphicsLineItem * m_link1, * m_link2, * m_link3;
+
+    double link1_position, link2_angle, link3_angle;
 
     void paint();
 };

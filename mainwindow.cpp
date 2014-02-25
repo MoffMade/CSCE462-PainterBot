@@ -30,6 +30,11 @@ MainWindow::MainWindow(QWidget *parent) :
     link_pen.setColor(Qt::red);
     m_link3 = scene->addLine(0,250,0,315, link_pen);  //75 pixels long
 
+    //store their initial D-H parameters
+    link1_position = 0;
+    link2_angle = 0;
+    link3_angle = 0;
+
     //add scene to the QGraphicsView
     //the following line is needed to tell the QGraphicsView where to center its view. otherwise, it is centered on the collective center of objects in the scene.
     //the -2 is added to keep scroll bars from appearing on the edges, which happens if you set the SceneRect to the same size of the QGraphicsView.
@@ -39,51 +44,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setScene(scene);
 
     //connect signals and slots
-    connect(ui->horizontalSlider,SIGNAL(sliderMoved(int)),this,SLOT(on_horizontalSlider_sliderMoved(int)));
-    connect(ui->horizontalSlider_2,SIGNAL(sliderMoved(int)),this,SLOT(on_horizontalSlider_2_sliderMoved(int)));
-    connect(ui->horizontalSlider_3,SIGNAL(sliderMoved(int)),this,SLOT(on_horizontalSlider_3_sliderMoved(int)));
+    connect(ui->pushButton_2,SIGNAL(clicked()),this,SLOT(on_pushButton_2_clicked()));
+    connect(ui->pushButton_3,SIGNAL(clicked()),this,SLOT(on_pushButton_3_clicked()));
+    connect(ui->pushButton_6,SIGNAL(clicked()),this,SLOT(on_pushButton_6_clicked()));
+    connect(ui->pushButton_7,SIGNAL(clicked()),this,SLOT(on_pushButton_7_clicked()));
+    connect(ui->pushButton_8,SIGNAL(clicked()),this,SLOT(on_pushButton_8_clicked()));
+    connect(ui->pushButton_9,SIGNAL(clicked()),this,SLOT(on_pushButton_9_clicked()));
 
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-//slider for link 1
-void MainWindow::on_horizontalSlider_sliderMoved(int position)
-{
-    //tell new value of link 1 location according to value
-    //ask for location of link 1
-    //set link 1 position
-    //ask for location of link 2
-    //set link 2 position
-    //ask for location of link 3
-    //set link 3 position
-    //paint if flag is set
-}
-
-//slider for link 2
-void MainWindow::on_horizontalSlider_2_sliderMoved(int position)
-{
-    //tell new value of link 2 location according to value
-    //link 1 doesnt change
-    //ask for location of link 2
-    //set link 2 position
-    //ask for location of link 3
-    //set link 3 position
-    //paint if flag is set
-}
-
-//slider for link 3
-void MainWindow::on_horizontalSlider_3_sliderMoved(int position)
-{
-    //tell new value of link 3 location according to value
-    //link 1 doesnt change
-    //link 2 doesnt change
-    //ask for location of link 3
-    //set link 3 position
-    //paint if flag is set
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -93,4 +65,37 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::paint(){
     //add tiny ellipse at the m_link3's (x2,y2);
+}
+
+//slots for first link
+void MainWindow::on_pushButton_2_clicked()
+{
+    //increment counter for link 1
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    //decrement counter for link 1
+}
+
+//slots for second link
+void MainWindow::on_pushButton_6_clicked()
+{
+    //increment counter for link 2
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    //decrement counter for link 2
+}
+
+//slots for third link
+void MainWindow::on_pushButton_8_clicked()
+{
+    //increment counter for link 3
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+    //increment counter for link 3
 }
