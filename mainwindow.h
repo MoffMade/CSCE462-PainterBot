@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QtGui>
+#include "forwardKinematics.h"
 
 namespace Ui {
 class MainWindow;
@@ -35,11 +36,16 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    QGraphicsLineItem * m_link1, * m_link2, * m_link3;
-
+    QPen m_link_pen;
+    QGraphicsScene *m_scene;
+    QGraphicsLineItem *m_link1, *m_link2, *m_link3;
     double link1_position, link2_angle, link3_angle;
+    DH_Param L1, L2, L3;
+    f_kin_solver_3dof solver;
+    bool m_paint_flag;
 
-    void paint();
+    void updateRobot();
+    void paint(double x, double y);
 };
 
 #endif // MAINWINDOW_H
