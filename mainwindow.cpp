@@ -30,6 +30,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_link_pen.setJoinStyle(Qt::RoundJoin);   //joined lines are joined with round edges
     m_link_pen.setWidthF(10);                 //line width
 
+    //draw robot arm base
+    m_scene->addLine(-10,0,310,0,m_link_pen);
+
     //draw links; add lines to the scene in their initial positions
     m_link1 = m_scene->addLine(0,0,0,150,m_link_pen);     //150 pixels long
     m_link_pen.setColor(Qt::blue);
@@ -46,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //add scene to the QGraphicsView
     //the following line is needed to tell the QGraphicsView where to center its view. otherwise, it is centered on the collective center of objects in the scene.
     //the -2 is added to keep scroll bars from appearing on the edges, which happens if you set the SceneRect to the same size of the QGraphicsView.
-    ui->graphicsView->setSceneRect(0,0,ui->graphicsView->width()-2, ui->graphicsView->height()-2);
+    ui->graphicsView->setSceneRect(-100,-150,ui->graphicsView->width()-2, ui->graphicsView->height()-2);
     //this line flips the y axis; this means that (0,0) is at the bottom left corner instead of top left.
     ui->graphicsView->scale(0.7,-0.7);
     ui->graphicsView->setScene(m_scene);
