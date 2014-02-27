@@ -123,6 +123,14 @@ void MainWindow::on_pushButton_3_clicked()
     else qDebug("link 1 out of range");
 }
 
+//slider for link 1
+void MainWindow::on_horizontalSlider_sliderMoved(int position)
+{
+    link1_position = position;
+    updateLink1();
+}
+
+
 //Link 2 functions
 //updates all links (really just 2 and 3 change) based on link 2
 void MainWindow::updateLink2(){

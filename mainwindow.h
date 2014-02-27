@@ -33,6 +33,8 @@ private slots:
 
     void on_pushButton_9_clicked();
 
+    void on_horizontalSlider_sliderMoved(int position);
+
 private:
     Ui::MainWindow *ui;
 
