@@ -106,15 +106,21 @@ void MainWindow::updateLink1(){
 //increment button slot for link 1
 void MainWindow::on_pushButton_2_clicked()
 {
-    link1_position++;
-    updateLink1();
+    if (link1_position + 1 <= 300){
+        link1_position++;
+        updateLink1();
+    }
+    else qDebug("link 1 out of range");
 }
 
 //decrement button slot for link 1
 void MainWindow::on_pushButton_3_clicked()
 {
-    link1_position--;
-    updateLink1();
+    if (link1_position - 1 >= 0){
+        link1_position--;
+        updateLink1();
+    }
+    else qDebug("link 1 out of range");
 }
 
 //Link 2 functions
