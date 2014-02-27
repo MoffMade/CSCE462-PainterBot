@@ -40,8 +40,8 @@ private:
     QGraphicsScene *m_scene;
     QGraphicsLineItem *m_link1, *m_link2, *m_link3;
     double link1_position, link2_angle, link3_angle;
-    DH_Param L1, L2, L3;
-    f_kin_solver_3dof solver;
+    DH_Param L0, L1, L2, L3;
+    f_kin_solver solver;
     bool m_paint_flag;
 
     void updateRobot();

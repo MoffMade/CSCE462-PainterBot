@@ -5,8 +5,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    L1(), L2(), L3(),
-    solver(L1, L2, L3)
+    L0(), L1(), L2(), L3(),
+    solver(L0, L1, L2, L3)
 {
     ui->setupUi(this);
 
