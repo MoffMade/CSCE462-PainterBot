@@ -5,7 +5,10 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    L0(), L1(), L2(), L3(),
+    L0(0,0,0,0),            // d is variable (prismatic)
+    L1(90,150,0,0),         // non-variable transform
+    L2(0,100,0,0),          // theta is variable (revolute)
+    L3(0,75,0,0),
     solver(L0, L1, L2, L3)
 {
     ui->setupUi(this);
