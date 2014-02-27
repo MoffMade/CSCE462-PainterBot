@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //the -2 is added to keep scroll bars from appearing on the edges, which happens if you set the SceneRect to the same size of the QGraphicsView.
     ui->graphicsView->setSceneRect(0,0,ui->graphicsView->width()-2, ui->graphicsView->height()-2);
     //this line flips the y axis; this means that (0,0) is at the bottom left corner instead of top left.
-    ui->graphicsView->scale(1,-1);
+    ui->graphicsView->scale(0.7,-0.7);
     ui->graphicsView->setScene(m_scene);
 
 }
@@ -55,14 +55,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::updateRobot()
-{
-    //vector<vector<double> > update_theta(int link, double new_Theta);
-    //vector<vector<double> > update_baseSlider(double newPos);
-    //calculate new positions
-    std::vector<std::vector<double> > points;
-    //points = solver.updateBaseSlider(link1_position);
 
+//actually sets positions of drawn lines
+void MainWindow::updateRobot(vector<vector<double> > points)
+{
     //set positions of lines
     if(!points.empty()){
         m_link1->setLine(points[0][0], points[0][1], points[1][0], points[1][1]);
@@ -76,6 +72,7 @@ void MainWindow::updateRobot()
     }
 }
 
+//checks if the paint flag is set and if so, draws a circle
 void MainWindow::paint(double x, double y){
     //add 10px circle at the m_link3's (x2,y2);
     if(m_paint_flag){
@@ -83,6 +80,7 @@ void MainWindow::paint(double x, double y){
     }
 }
 
+//toggles paint flag
 void MainWindow::on_pushButton_clicked()
 {
     if(ui->pushButton->isChecked()){
@@ -93,37 +91,71 @@ void MainWindow::on_pushButton_clicked()
     }
 }
 
-//slots for first link
+//Link 1 functions
+//updates all links based on a change in link 1
+void MainWindow::updateLink1(){
+    ui->label_4->setText(QString::number(link1_position));
+    std::vector<std::vector<double> > points;
+    points = solver.updateBaseSlider(link1_position);
+    updateRobot(points);
+}
+
+//increment button slot for link 1
 void MainWindow::on_pushButton_2_clicked()
 {
     link1_position++;
-    ui->label_4->setText(QString::number(link1_position));
-    updateRobot();
+    updateLink1();
 }
 
+//decrement button slot for link 1
 void MainWindow::on_pushButton_3_clicked()
 {
-    //decrement counter for link 1
+    link1_position--;
+    updateLink1();
 }
 
-//slots for second link
+//Link 2 functions
+//updates all links (really just 2 and 3 change) based on link 2
+void MainWindow::updateLink2(){
+    ui->label_6->setText(QString::number(link2_angle));
+    std::vector<std::vector<double> > points;
+    points = solver.updateTheta(link2_angle, 2);        //*magic* number: represents link number
+    updateRobot(points);
+}
+
+//increment angle button slot for link 2
 void MainWindow::on_pushButton_6_clicked()
 {
-    //increment counter for link 2
+    link2_angle++;
+    updateLink2();
 }
 
+//decrement angle button slot for link 2
 void MainWindow::on_pushButton_7_clicked()
 {
-    //decrement counter for link 2
+    link2_angle--;
+    updateLink2();
 }
 
-//slots for third link
+//Link 3 functions
+// updates link 3
+void MainWindow::updateLink3(){
+    ui->label_7->setText(QString::number(link3_angle));
+    std::vector<std::vector<double> > points;
+    points = solver.updateTheta(link3_angle, 3);        //*magic* number: represents link number
+    updateRobot(points);
+}
+
+//increment angle button slot for link 3
 void MainWindow::on_pushButton_8_clicked()
 {
-    //increment counter for link 3
+    link3_angle++;
+    updateLink3();
 }
 
+//decrement angle button slot for link 3
 void MainWindow::on_pushButton_9_clicked()
 {
-    //increment counter for link 3
+    link3_angle--;
+    updateLink3();
 }

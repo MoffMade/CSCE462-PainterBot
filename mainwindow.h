@@ -44,7 +44,10 @@ private:
     f_kin_solver solver;
     bool m_paint_flag;
 
-    void updateRobot();
+    void updateRobot(vector<vector<double> > points);
+    void updateLink1();
+    void updateLink2();
+    void updateLink3();
     void paint(double x, double y);
 };
 
