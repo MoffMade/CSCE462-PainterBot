@@ -228,7 +228,7 @@ void MainWindow::on_pushButton_10_clicked()
 {
     vector<vector<double> > points;
     end_effector_position.setX(end_effector_position.x() + 1);
-    points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle);
+    points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle + link3_angle - 90);
     updateRobot(points);
 }
 
@@ -236,7 +236,7 @@ void MainWindow::on_pushButton_11_clicked()
 {
     vector<vector<double> > points;
     end_effector_position.setX(end_effector_position.x() - 1);
-    points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle);
+    points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle + link3_angle - 90);
     updateRobot(points);
 }
 
@@ -244,14 +244,15 @@ void MainWindow::on_pushButton_12_clicked()
 {
     vector<vector<double> > points;
     end_effector_position.setY(end_effector_position.y() + 1);
-    points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle);
+    points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle + link3_angle - 90);
     updateRobot(points);
+
 }
 
 void MainWindow::on_pushButton_13_clicked()
 {
     vector<vector<double> > points;
     end_effector_position.setY(end_effector_position.y() - 1);
-    points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle);
+    points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle + link3_angle - 90);
     updateRobot(points);
 }
