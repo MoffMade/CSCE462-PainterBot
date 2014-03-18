@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
+#include <qmath.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -230,6 +231,12 @@ void MainWindow::on_pushButton_10_clicked()
     end_effector_position.setX(end_effector_position.x() + 1);
     points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle + link3_angle - 90);
     updateRobot(points);
+    link1_position = points[0][0];
+    link2_angle = qAtan2((points[2][0] - points[1][0]), (points[2][1] - points[1][1]));
+    link3_angle = qAtan2((points[3][0] - points[2][0]), (points[3][1] - points[2][1])) - link2_angle;
+    ui->label_4->setText(QString::number(link1_position));
+    ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
+    ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
 }
 
 void MainWindow::on_pushButton_11_clicked()
@@ -238,6 +245,12 @@ void MainWindow::on_pushButton_11_clicked()
     end_effector_position.setX(end_effector_position.x() - 1);
     points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle + link3_angle - 90);
     updateRobot(points);
+    link1_position = points[0][0];
+    link2_angle = qAtan2((points[2][0] - points[1][0]), (points[2][1] - points[1][1]));
+    link3_angle = qAtan2((points[3][0] - points[2][0]), (points[3][1] - points[2][1])) - link2_angle;
+    ui->label_4->setText(QString::number(link1_position));
+    ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
+    ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
 }
 
 void MainWindow::on_pushButton_12_clicked()
@@ -246,7 +259,12 @@ void MainWindow::on_pushButton_12_clicked()
     end_effector_position.setY(end_effector_position.y() + 1);
     points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle + link3_angle - 90);
     updateRobot(points);
-
+    link1_position = points[0][0];
+    link2_angle = qAtan2((points[2][0] - points[1][0]), (points[2][1] - points[1][1]));
+    link3_angle = qAtan2((points[3][0] - points[2][0]), (points[3][1] - points[2][1])) - link2_angle;
+    ui->label_4->setText(QString::number(link1_position));
+    ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
+    ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
 }
 
 void MainWindow::on_pushButton_13_clicked()
@@ -255,4 +273,10 @@ void MainWindow::on_pushButton_13_clicked()
     end_effector_position.setY(end_effector_position.y() - 1);
     points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y(), link2_angle + link3_angle - 90);
     updateRobot(points);
+    link1_position = points[0][0];
+    link2_angle = qAtan2((points[2][0] - points[1][0]), (points[2][1] - points[1][1]));
+    link3_angle = qAtan2((points[3][0] - points[2][0]), (points[3][1] - points[2][1])) - link2_angle;
+    ui->label_4->setText(QString::number(link1_position));
+    ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
+    ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
 }
