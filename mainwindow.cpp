@@ -111,6 +111,7 @@ void MainWindow::on_pushButton_2_clicked()
 {
     if (link1_position + 1 <= 300){
         link1_position++;
+        ui->horizontalSlider->setValue(link1_position);
         updateLink1();
     }
     else qDebug("link 1 out of range");
@@ -121,6 +122,7 @@ void MainWindow::on_pushButton_3_clicked()
 {
     if (link1_position - 1 >= 0){
         link1_position--;
+        ui->horizontalSlider->setValue(link1_position);
         updateLink1();
     }
     else qDebug("link 1 out of range");
@@ -148,6 +150,7 @@ void MainWindow::on_pushButton_6_clicked()
 {
     if (link2_angle + 1 <= 359){
         link2_angle++;
+        ui->horizontalSlider_2->setValue(link2_angle);
         updateLink2();
     }
     else qDebug("link 2 is out of range");
@@ -158,6 +161,7 @@ void MainWindow::on_pushButton_7_clicked()
 {
     if(link2_angle - 1 >= 0){
         link2_angle--;
+        ui->horizontalSlider_2->setValue(link2_angle);
         updateLink2();
     }
     else qDebug("link 2 is out of range");
@@ -184,6 +188,7 @@ void MainWindow::on_pushButton_8_clicked()
 {
     if(link3_angle + 1 <= 359){
         link3_angle++;
+        ui->horizontalSlider_3->setValue(link3_angle);
         updateLink3();
     }
     else qDebug("link 3 is out of range");
@@ -194,6 +199,7 @@ void MainWindow::on_pushButton_9_clicked()
 {
     if (link3_angle - 1 >= 0){
         link3_angle--;
+        ui->horizontalSlider_3->setValue(link3_angle);
         updateLink3();
     }
     else qDebug("link 3 is out of range");

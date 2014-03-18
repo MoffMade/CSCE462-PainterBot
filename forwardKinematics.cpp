@@ -32,20 +32,20 @@ void T_Matrix::calcMatrix(DH_Param dh){
 	//Calculates a transformation matrix based upon the provided DH parameters (alpha, a, d, theta)
 	//Using the formula based upon the lectures and online sources. Generates a 4x4 matrix that 
 	//describes the rotation of the frame as well as the translation from origin_frame to destination_frame
-	matrix[0][0]=round(cos(dh.theta));
-	matrix[0][1]=round(-sin(dh.theta)*cos(dh.alpha));
-	matrix[0][2]=round(sin(dh.theta)*sin(dh.alpha));
-	matrix[0][3]=round(dh.a*cos(dh.theta));
+    matrix[0][0]=(cos(dh.theta));
+    matrix[0][1]=(-sin(dh.theta)*cos(dh.alpha));
+    matrix[0][2]=(sin(dh.theta)*sin(dh.alpha));
+    matrix[0][3]=(dh.a*cos(dh.theta));
 
-	matrix[1][0]=round(sin(dh.theta));
-	matrix[1][1]=round(cos(dh.theta)*cos(dh.alpha));
-	matrix[1][2]=round(-cos(dh.theta)*sin(dh.alpha));
-	matrix[1][3]=round(dh.a*sin(dh.theta));
+    matrix[1][0]=(sin(dh.theta));
+    matrix[1][1]=(cos(dh.theta)*cos(dh.alpha));
+    matrix[1][2]=(-cos(dh.theta)*sin(dh.alpha));
+    matrix[1][3]=(dh.a*sin(dh.theta));
 
 	matrix[2][0]=0;
-	matrix[2][1]=round(sin(dh.alpha));
-	matrix[2][2]=round(cos(dh.alpha));
-	matrix[2][3]=round(dh.d);
+    matrix[2][1]=(sin(dh.alpha));
+    matrix[2][2]=(cos(dh.alpha));
+    matrix[2][3]=(dh.d);
 
 	matrix[3][0]=0;
 	matrix[3][1]=0;
@@ -78,7 +78,7 @@ void T_Matrix::T_Mat_multiply(const T_Matrix A, const T_Matrix B){
 			for(int k=0; k<4; k++){
 				temp+=(A.get(i,k)*B.get(k,j));
 			};
-			matrix[i][j]=round(temp);
+            matrix[i][j]=(temp);
 		};
 	};
 	origin_frame=A.getOrg();
@@ -94,7 +94,7 @@ vector<double> T_Matrix::pointTransform(vector<double> org_pos){
 		for(int k=0; k<4; k++){
 			temp+=matrix[i][k]*org_pos[k];
 		}
-		result.push_back(round(temp));
+        result.push_back((temp));
 	}
 	return result;
 };
