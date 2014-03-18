@@ -1,3 +1,5 @@
+//warning: the stuff below is HIDEOUS
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
@@ -237,6 +239,9 @@ void MainWindow::on_pushButton_10_clicked()
     ui->label_4->setText(QString::number(link1_position));
     ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
     ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
+    ui->horizontalSlider->setValue(link1_position);
+    ui->horizontalSlider_2->setValue(link2_angle);
+    ui->horizontalSlider_2->setValue(link3_angle);
 }
 
 void MainWindow::on_pushButton_11_clicked()
@@ -251,6 +256,9 @@ void MainWindow::on_pushButton_11_clicked()
     ui->label_4->setText(QString::number(link1_position));
     ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
     ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
+    ui->horizontalSlider->setValue(link1_position);
+    ui->horizontalSlider_2->setValue(link2_angle);
+    ui->horizontalSlider_2->setValue(link3_angle);
 }
 
 void MainWindow::on_pushButton_12_clicked()
@@ -265,6 +273,9 @@ void MainWindow::on_pushButton_12_clicked()
     ui->label_4->setText(QString::number(link1_position));
     ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
     ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
+    ui->horizontalSlider->setValue(link1_position);
+    ui->horizontalSlider_2->setValue(link2_angle);
+    ui->horizontalSlider_2->setValue(link3_angle);
 }
 
 void MainWindow::on_pushButton_13_clicked()
@@ -279,4 +290,7 @@ void MainWindow::on_pushButton_13_clicked()
     ui->label_4->setText(QString::number(link1_position));
     ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
     ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
+    ui->horizontalSlider->setValue(link1_position);
+    ui->horizontalSlider_2->setValue(link2_angle);
+    ui->horizontalSlider_2->setValue(link3_angle);
 }
