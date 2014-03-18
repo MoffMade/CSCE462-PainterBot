@@ -41,6 +41,14 @@ MainWindow::MainWindow(QWidget *parent) :
     m_link3 = m_scene->addLine(0,250,0,315, m_link_pen);  //75 pixels long
     m_link_pen.setColor(Qt::yellow);
 
+    //set end effector position
+    end_effector_position.setX(0);
+    end_effector_position.setY(315);
+
+    //set end effector coordinate labels
+    ui->label_9->setText(QString::number(end_effector_position.x()));
+    ui->label_11->setText(QString::number(end_effector_position.y()));
+
     //store their initial D-H parameters
     link1_position = 0;
     link2_angle = 0;
@@ -72,6 +80,14 @@ void MainWindow::updateRobot(vector<vector<double> > points)
         m_link3->setLine(points[2][0], points[2][1], points[3][0], points[3][1]);
 
         paint(points[3][0], points[3][1]);
+
+        //set end_effector_position
+        end_effector_position.setX(points[3][0]);
+        end_effector_position.setY(points[3][1]);
+
+        //set end effector coordinate labels
+        ui->label_9->setText(QString::number(end_effector_position.x()));
+        ui->label_11->setText(QString::number(end_effector_position.y()));
     }
     else{
         qDebug("forward kinematics calculation failure");
@@ -204,4 +220,13 @@ void MainWindow::on_horizontalSlider_3_sliderMoved(int position)
 {
     link3_angle = position;
     updateLink3();
+}
+
+
+//World Control
+void MainWindow::on_pushButton_10_clicked()
+{
+    //check range
+    //increment label
+    //increment x value
 }

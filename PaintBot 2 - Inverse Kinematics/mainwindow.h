@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include <QtGui>
-#include "forwardKinematics.h"
+#include <QPoint>
+#include "kinematics.h"
 
 namespace Ui {
 class MainWindow;
@@ -39,6 +40,8 @@ private slots:
 
     void on_horizontalSlider_3_sliderMoved(int position);
 
+    void on_pushButton_10_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -46,8 +49,9 @@ private:
     QGraphicsScene *m_scene;
     QGraphicsLineItem *m_link1, *m_link2, *m_link3;
     double link1_position, link2_angle, link3_angle;
+    QPointF end_effector_position;
     DH_Param L0, L1, L2, L3;
-    f_kin_solver solver;
+    kin_solver solver;
     bool m_paint_flag;
 
     void updateRobot(vector<vector<double> > points);
