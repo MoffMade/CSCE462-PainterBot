@@ -146,9 +146,13 @@ vector<vector<double> > kin_solver::inverseSolver(double end_x, double end_y, do
 	theta2=acos((x_wrist-l1)/l2);
 	d_length=z_wrist+l2*sin(theta2);
 	theta3=phi-theta2-90;
-	DH_Parameters[0].d=d_length;
-	DH_Parameters[2].theta=theta2;
-	DH_Parameters[3].theta=theta3;
+	cout<<"Inverse solution- "<<"D: "<<d_length<<" theta2: "<<theta2<<" theta3: "<<theta3<<endl;
+	updateBaseSlider(d_length);
+	updateTheta(fmod(theta2,360),2);
+	XYpositions=updateTheta(fmod(theta3,360),3);
+	/*DH_Parameters[0].d=d_length;
+	DH_Parameters[2].theta=fmod(theta2,360);
+	DH_Parameters[3].theta=fmod(theta3,360);
 	updateTMatrices();
 	linkPositions=updateArmLinks();		//Get (X,Y,Z) positions for link points.
 	vector<double> temp;
@@ -158,7 +162,7 @@ vector<vector<double> > kin_solver::inverseSolver(double end_x, double end_y, do
 		temp.push_back(linkPositions[i][2]);	//Z value of position to first parameter
 		temp.push_back(linkPositions[i][0]);	//X value of position to second parameter
 		XYpositions.push_back(temp);			//Store (Z,X) position to XYpositions to return to the GUI
-	}
+	}*/
 	return XYpositions;
 };
 
