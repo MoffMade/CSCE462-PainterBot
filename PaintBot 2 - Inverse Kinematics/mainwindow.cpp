@@ -15,6 +15,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    Dialog *d = new Dialog(this);
     hide();
-    d.show();
+    d->show();
 }
