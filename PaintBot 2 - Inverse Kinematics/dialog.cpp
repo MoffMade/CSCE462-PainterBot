@@ -17,5 +17,9 @@ Dialog::~Dialog()
 
 void Dialog::on_pushButton_clicked()
 {
+    //abort current connection
+    //change lable to "disconnected"
+    //connect to server
+    //change label to "connected" on success
     hide();
 }

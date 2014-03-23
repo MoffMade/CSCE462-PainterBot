@@ -8,11 +8,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     move(500,300);
     SettingsDialog = new Dialog(this);
+
+    //set up QTcpSocket
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    //delete dialog
+    //delete QTcpSocket
 }
 
 void MainWindow::on_pushButton_clicked()
