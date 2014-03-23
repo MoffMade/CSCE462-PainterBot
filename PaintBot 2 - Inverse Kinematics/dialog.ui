@@ -2,8 +2,16 @@
 <ui version="4.0">
  <class>Dialog</class>
  <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>271</width>
+    <height>232</height>
+   </rect>
+  </property>
   <property name="windowTitle">
-   <string>Server Configuration</string>
+   <string>Connection Configuration</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="1" column="1">
@@ -34,7 +42,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Port Number</string>
+        <string>Server IP Address</string>
        </property>
       </widget>
      </item>
@@ -54,7 +62,7 @@
      <item row="2" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Time Delay</string>
+        <string>Server Port Number</string>
        </property>
       </widget>
      </item>

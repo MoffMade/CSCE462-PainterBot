@@ -37,7 +37,7 @@
     <item row="6" column="1">
      <widget class="QPushButton" name="pushButton">
       <property name="text">
-       <string>Configure Server...</string>
+       <string>Configure Connection...</string>
       </property>
      </widget>
     </item>
