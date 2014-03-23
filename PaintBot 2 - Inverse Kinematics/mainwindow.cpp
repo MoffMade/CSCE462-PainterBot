@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    move(500,300);
+    SettingsDialog = new Dialog(this);
 }
 
 MainWindow::~MainWindow()
@@ -15,7 +17,5 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    Dialog *d = new Dialog(this);
-    hide();
-    d->show();
+    SettingsDialog->show();
 }
