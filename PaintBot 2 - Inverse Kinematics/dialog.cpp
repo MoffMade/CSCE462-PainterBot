@@ -8,6 +8,9 @@ Dialog::Dialog(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->pushButton, SIGNAL(clicked()), (MainWindow* ) this->parent(),SLOT(show()));
+
+    //connect the new connection signal to the new connection slot in the main window
+    connect(this, SIGNAL(new_connection(QString, qint16)), (MainWindow*) this->parent(), SLOT(new_connection(QString, qint16)));
 }
 
 Dialog::~Dialog()
@@ -17,9 +20,7 @@ Dialog::~Dialog()
 
 void Dialog::on_pushButton_clicked()
 {
-    //abort current connection
-    //change lable to "disconnected"
-    //connect to server
-    //change label to "connected" on success
+    //signal new connection
+    emit new_connection(ui->lineEdit->text(), ui->lineEdit_2->text().toInt());
     hide();
 }
