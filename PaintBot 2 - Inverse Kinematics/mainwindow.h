@@ -23,6 +23,7 @@ public slots:
 private slots:
     void on_pushButton_clicked();
     void socket_error();
+    void readReady();
 
 private:
     Ui::MainWindow *ui;
