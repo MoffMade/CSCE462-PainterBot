@@ -4,7 +4,12 @@
 #include <QMainWindow>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QGraphicsScene>
+
+
+
 #include "dialog.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -28,26 +33,25 @@ private:
     QTcpServer *m_server;
     QTcpSocket *m_socket;
     qint16 m_port_number;
+
+    QPen m_link_pen;
+    QGraphicsScene *m_scene;
+    QGraphicsLineItem *m_link1, *m_link2, *m_link3;
+
     int m_delay;
     bool m_paint_flag;
 
+    double m_link1Value;
+    double m_link2Value;
+    double m_link3Value;
+
+    double m_XValue;
+    double m_YValue;
+
     //updates robot display based kinematics module
-    void linkUpdate(vector<vector< double> > joints);
-
-    //updates dh-parameter values
-    void updateLink1(double z);
-    void updateLink2(double theta);
-    void updateLink3(double theta);
-
-    //updates end-effector x and y locations
-    void updateX(double x);
-    void updateY(double y);
-
-    //updates simulated delay
-    void updateDelay(int seconds);
-
-    //sends update data to client
-    void remoteUpdate(vector<vector<double> > joints);
+    void linkUpdate();
+    void worldUpdate();
+    void remoteUpdate(std::vector<std::vector<double> > joints);
 
 private slots:
     void acceptConnection();
