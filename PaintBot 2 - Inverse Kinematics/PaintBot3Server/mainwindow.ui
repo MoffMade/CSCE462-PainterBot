@@ -340,16 +340,16 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit">
+      <widget class="QPushButton" name="pushButton_4">
        <property name="text">
-        <string>0</string>
+        <string>Set Delay</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QLineEdit" name="lineEdit">
        <property name="text">
-        <string>Set Delay</string>
+        <string>0</string>
        </property>
       </widget>
      </item>
