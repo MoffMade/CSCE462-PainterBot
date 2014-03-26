@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_dialog = new Dialog(this);
     connect(m_dialog, SIGNAL(run(qint16)), this, SLOT(onRunSignal(qint16)));
     m_dialog->show();
+    m_server = new QTcpServer(this);
 }
 
 MainWindow::~MainWindow()
@@ -20,6 +21,22 @@ MainWindow::~MainWindow()
 void MainWindow::onRunSignal(qint16 port_number)
 {
     m_port_number = port_number;
+    connect(m_server, SIGNAL(newConnection()), this, SLOT(acceptConnection()));
+    if (!m_server->listen(QHostAddress::LocalHost, m_port_number)) qDebug("SERVER: %s", "Could not start Server");
     show();
     m_dialog->hide();
+}
+
+void MainWindow::acceptConnection()
+{
+    this->setWindowTitle("YEAH");
+    m_socket = m_server->nextPendingConnection();
+    connect(m_socket, SIGNAL(readyRead()), this, SLOT(readReady()));
+    m_socket->write("yeah");
+    m_socket->disconnectFromHost();
+}
+
+void MainWindow::readReady()
+{
+    //got reply from client
 }

@@ -40,9 +40,3 @@ void MainWindow::socket_error()
     //handle error
     qDebug("SOCKET ERROR: %s", m_socket->errorString().toStdString().c_str());
 }
-
-void MainWindow::readReady()
-{
-    this->setWindowTitle("SERVER RESPONSE");
-    //called when the server responds; ok to transmit data
-}

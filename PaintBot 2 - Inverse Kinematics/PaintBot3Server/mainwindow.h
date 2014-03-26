@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTcpServer>
+#include <QTcpSocket>
 #include "dialog.h"
 
 namespace Ui {
@@ -23,7 +25,13 @@ private:
     Ui::MainWindow *ui;
     Dialog *m_dialog;
 
+    QTcpServer *m_server;
+    QTcpSocket *m_socket;
     qint16 m_port_number;
+
+private slots:
+    void acceptConnection();
+    void readReady();
 };
 
 #endif // MAINWINDOW_H
