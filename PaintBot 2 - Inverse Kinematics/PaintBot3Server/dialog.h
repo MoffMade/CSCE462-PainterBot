@@ -16,7 +16,7 @@ public:
     ~Dialog();
     
 signals:
-    void run(qint16 port_number, qint16 delay);
+    void run(qint16 port_number);
 
 private slots:
     void on_pushButton_clicked();

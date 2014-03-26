@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>171</width>
-    <height>163</height>
+    <width>135</width>
+    <height>121</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,16 +23,6 @@
    </item>
    <item>
     <widget class="QLineEdit" name="lineEdit"/>
-   </item>
-   <item>
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Simulated Delay</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="lineEdit_2"/>
    </item>
    <item>
     <spacer name="verticalSpacer">
