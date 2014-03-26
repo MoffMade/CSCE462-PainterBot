@@ -16,10 +16,13 @@ public:
     ~Dialog();
     
 signals:
-    void run(qint16 port_number);
+    void runServer(qint16 port_number);
+    void runClient(QString address, qint16 port_number);
 
 private slots:
     void on_pushButton_clicked();
+
+    void on_checkBox_clicked();
 
 private:
     Ui::Dialog *ui;

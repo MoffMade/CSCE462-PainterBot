@@ -6,14 +6,31 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>135</width>
-    <height>121</height>
+    <width>261</width>
+    <height>235</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QCheckBox" name="checkBox">
+     <property name="text">
+      <string>This is a Server Instance</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Address</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="lineEdit_2"/>
+   </item>
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
@@ -40,7 +57,7 @@
    <item>
     <widget class="QPushButton" name="pushButton">
      <property name="text">
-      <string>PushButton</string>
+      <string>OK</string>
      </property>
     </widget>
    </item>

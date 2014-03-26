@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_delay = 0;
     ui->setupUi(this);
     m_dialog = new Dialog(this);
-    connect(m_dialog, SIGNAL(run(qint16)), this, SLOT(onRunSignal(qint16)));
+    connect(m_dialog, SIGNAL(runServer(qint16)), this, SLOT(onRunServer(qint16)));
+    connect(m_dialog, SIGNAL(runClient(QString,qint16)), this, SLOT(onRunClient(QString,qint16)));
     m_dialog->show();
     m_server = new QTcpServer(this);
     m_socket = 0;
@@ -59,12 +60,24 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::onRunSignal(qint16 port_number)
+void MainWindow::onRunServer(qint16 port_number)
 {
+    m_isServer = true;
     m_port_number = port_number;
     connect(m_server, SIGNAL(newConnection()), this, SLOT(acceptConnection()));
     if (!m_server->listen(QHostAddress::LocalHost, m_port_number)) qDebug("SERVER: %s", "Could not start Server");
+    show();
+    m_dialog->hide();
+}
+
+void MainWindow::onRunClient(QString address, qint16 port_number)
+{
+    m_isServer = false;
+    ui->lineEdit->setEnabled(false);
+    m_socket = new QTcpSocket(this);
+    m_socket->connectToHost(address, port_number);
+    connect(m_socket, SIGNAL(readyRead()), this, SLOT(readReady()));
+    connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError()));
     show();
     m_dialog->hide();
 }
@@ -73,13 +86,37 @@ void MainWindow::acceptConnection()
 {
     m_socket = m_server->nextPendingConnection();
     connect(m_socket, SIGNAL(readyRead()), this, SLOT(readReady()));
-    m_socket->write("yeah");
-    m_socket->disconnectFromHost();
+    connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError()));
 }
 
 void MainWindow::readReady()
 {
-    //got reply from client
+    //read socket
+    if(m_socket->canReadLine()){
+        char* d;
+        m_socket->readLine(d, 2000);
+        qDebug("Recieved String: %s", d);
+        QString data = QString(d);
+
+        //parse string
+        QStringList list = data.split(" ");
+        m_link1Value = list.at(0).toDouble();
+        m_link2Value = list.at(1).toDouble();
+        m_link3Value = list.at(2).toDouble();
+        m_XValue = list.at(3).toDouble();
+        m_YValue = list.at(4).toDouble();
+        double linkOrWorld = list.at(5).toDouble();
+
+        //call update function
+        if(linkOrWorld == 0) linkUpdate();
+        if(linkOrWorld == 1) worldUpdate();
+    }
+}
+
+void MainWindow::socketError()
+{
+    //handle error
+    qDebug("SOCKET ERROR: %s", m_socket->errorString().toStdString().c_str());
 }
 
 /***************************************************************/
@@ -92,6 +129,10 @@ void MainWindow::linkUpdate()
     //kinematics calls
     //std::vector<std::vector<double> > joints = f_kin_solver(m_link1Value, m_link2Value, m_link3Value);
     //std::vector<double> link_values = getLinkValues();
+
+    //set X and Y values
+    //m_XValue = joints[3][0];
+    //m_YValue = joints[3][1];
 
     //set new link values
     //m_link1Value = link_values[0];
@@ -119,7 +160,7 @@ void MainWindow::linkUpdate()
         }
         joints.push_back(tmp);
     }
-    remoteUpdate(joints);
+    remoteUpdate();
 }
 
 //update based on world control
@@ -129,25 +170,25 @@ void MainWindow::worldUpdate()
 }
 
 //remote update
-void MainWindow::remoteUpdate(std::vector<std::vector<double> > joints)
+void MainWindow::remoteUpdate()
 {
-    if((m_delay == 0) && (m_socket != 0)){
-        QString data;
-        for(int i = 0; i < 4; i++){
-            for(int j = 0; j < 2; j++){
-                data.append(QString::number(joints[i][j]));
-                data.append(" ");
-            }
+    if((!m_isServer) || (m_isServer && m_delay == 0)){
+        if(m_socket != 0){
+            QString data;
+            data.append(QString::number(m_link1Value));
+            data.append(" ");
+            data.append(QString::number(m_link2Value));
+            data.append(" ");
+            data.append(QString::number(m_link3Value));
+            data.append(" ");
+            data.append(QString::number(m_XValue));
+            data.append(" ");
+            data.append(QString::number(m_YValue));
+            data.append("\n");
+            m_socket->write(data.toStdString().c_str());
+            m_socket->flush();
+            qDebug("Sending String: %s", data.toStdString().c_str());
         }
-        data.append(QString::number(m_link1Value));
-        data.append(" ");
-        data.append(QString::number(m_link2Value));
-        data.append(" ");
-        data.append(QString::number(m_link3Value));
-        data.append("\n");
-        m_socket->write(data.toStdString().c_str());
-        m_socket->flush();
-        qDebug("Sending String: %s", data.toStdString().c_str());
     }
 }
 

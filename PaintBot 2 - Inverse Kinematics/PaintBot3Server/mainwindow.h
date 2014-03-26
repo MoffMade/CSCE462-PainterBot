@@ -24,7 +24,8 @@ public:
     ~MainWindow();
 
 public slots:
-    void onRunSignal(qint16 port_number);
+    void onRunServer(qint16 port_number);
+    void onRunClient(QString address, qint16 port_number);
     
 private:
     Ui::MainWindow *ui;
@@ -40,6 +41,7 @@ private:
 
     int m_delay;
     bool m_paint_flag;
+    bool m_isServer;
 
     double m_link1Value;
     double m_link2Value;
@@ -51,11 +53,12 @@ private:
     //updates robot display based kinematics module
     void linkUpdate();
     void worldUpdate();
-    void remoteUpdate(std::vector<std::vector<double> > joints);
+    void remoteUpdate();
 
 private slots:
     void acceptConnection();
     void readReady();
+    void socketError();
     void on_pushButton_2_clicked();
     void on_pushButton_3_clicked();
     void on_horizontalSlider_sliderMoved(int position);
