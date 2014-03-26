@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_YValue = 0;
     m_paint_flag = false;
     m_delay = 0;
+    m_fromRemote = false;
     ui->setupUi(this);
     m_dialog = new Dialog(this);
     connect(m_dialog, SIGNAL(runServer(qint16)), this, SLOT(onRunServer(qint16)));
@@ -62,6 +63,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::onRunServer(qint16 port_number)
 {
+    setWindowTitle("PaintBot - Server");
     m_isServer = true;
     m_port_number = port_number;
     connect(m_server, SIGNAL(newConnection()), this, SLOT(acceptConnection()));
@@ -73,6 +75,7 @@ void MainWindow::onRunServer(qint16 port_number)
 void MainWindow::onRunClient(QString address, qint16 port_number)
 {
     m_isServer = false;
+    setWindowTitle("PaintBot - Client");
     ui->lineEdit->setEnabled(false);
     m_socket = new QTcpSocket(this);
     m_socket->connectToHost(address, port_number);
@@ -93,7 +96,7 @@ void MainWindow::readReady()
 {
     //read socket
     if(m_socket->canReadLine()){
-        char* d;
+        char d[2000];
         m_socket->readLine(d, 2000);
         qDebug("Recieved String: %s", d);
         QString data = QString(d);
@@ -108,6 +111,7 @@ void MainWindow::readReady()
         double linkOrWorld = list.at(5).toDouble();
 
         //call update function
+        m_fromRemote = true;
         if(linkOrWorld == 0) linkUpdate();
         if(linkOrWorld == 1) worldUpdate();
     }
@@ -117,6 +121,25 @@ void MainWindow::socketError()
 {
     //handle error
     qDebug("SOCKET ERROR: %s", m_socket->errorString().toStdString().c_str());
+}
+
+void MainWindow::setUIEnabled(bool val)
+{
+    ui->pushButton->setEnabled(val);
+    ui->pushButton_2->setEnabled(val);
+    ui->pushButton_3->setEnabled(val);
+    ui->pushButton_6->setEnabled(val);
+    ui->pushButton_7->setEnabled(val);
+    ui->pushButton_8->setEnabled(val);
+    ui->pushButton_9->setEnabled(val);
+    ui->pushButton_10->setEnabled(val);
+    ui->pushButton_11->setEnabled(val);
+    ui->pushButton_12->setEnabled(val);
+    ui->pushButton_13->setEnabled(val);
+
+    ui->horizontalSlider->setEnabled(val);
+    ui->horizontalSlider_2->setEnabled(val);
+    ui->horizontalSlider_3->setEnabled(val);
 }
 
 /***************************************************************/
@@ -160,7 +183,8 @@ void MainWindow::linkUpdate()
         }
         joints.push_back(tmp);
     }
-    remoteUpdate();
+    if(!m_fromRemote) remoteUpdate(0);
+    m_fromRemote = false;
 }
 
 //update based on world control
@@ -170,7 +194,7 @@ void MainWindow::worldUpdate()
 }
 
 //remote update
-void MainWindow::remoteUpdate()
+void MainWindow::remoteUpdate(double linkOrWorld)
 {
     if((!m_isServer) || (m_isServer && m_delay == 0)){
         if(m_socket != 0){
@@ -184,6 +208,8 @@ void MainWindow::remoteUpdate()
             data.append(QString::number(m_XValue));
             data.append(" ");
             data.append(QString::number(m_YValue));
+            data.append(" ");
+            data.append(QString::number(linkOrWorld));
             data.append("\n");
             m_socket->write(data.toStdString().c_str());
             m_socket->flush();
@@ -285,4 +311,6 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
     m_delay = ui->lineEdit->text().toInt();
+    if(m_delay == 0) setUIEnabled(true);
+    else setUIEnabled(false);
 }

@@ -42,6 +42,7 @@ private:
     int m_delay;
     bool m_paint_flag;
     bool m_isServer;
+    bool m_fromRemote;
 
     double m_link1Value;
     double m_link2Value;
@@ -53,7 +54,8 @@ private:
     //updates robot display based kinematics module
     void linkUpdate();
     void worldUpdate();
-    void remoteUpdate();
+    void remoteUpdate(double linkOrWorld);
+    void setUIEnabled(bool val);
 
 private slots:
     void acceptConnection();
