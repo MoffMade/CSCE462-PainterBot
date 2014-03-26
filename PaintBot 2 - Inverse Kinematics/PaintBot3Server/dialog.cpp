@@ -16,6 +16,6 @@ Dialog::~Dialog()
 
 void Dialog::on_pushButton_clicked()
 {
-    emit run(ui->lineEdit->text().toInt());
+    emit run(ui->lineEdit->text().toInt(), ui->lineEdit_2->text().toInt());
     hide();
 }

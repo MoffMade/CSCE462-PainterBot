@@ -19,7 +19,7 @@ public:
     ~MainWindow();
 
 public slots:
-    void onRunSignal(qint16 port_number);
+    void onRunSignal(qint16 port_number, qint16 delay);
     
 private:
     Ui::MainWindow *ui;
@@ -28,6 +28,7 @@ private:
     QTcpServer *m_server;
     QTcpSocket *m_socket;
     qint16 m_port_number;
+    qint16 m_delay;
 
 private slots:
     void acceptConnection();
