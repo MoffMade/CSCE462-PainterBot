@@ -95,7 +95,7 @@ void MainWindow::acceptConnection()
 void MainWindow::readReady()
 {
     //read socket
-    if(m_socket->canReadLine()){
+    while(m_socket->canReadLine()){
         char d[2000];
         m_socket->readLine(d, 2000);
         qDebug("Recieved String: %s", d);
@@ -174,15 +174,6 @@ void MainWindow::linkUpdate()
     ui->label_6->setText(QString::number(m_link2Value));
     ui->label_7->setText(QString::number(m_link3Value));
 
-    //send remote update info
-    std::vector<std::vector<double> > joints;
-    for(int i = 0; i < 4; i++){
-        std::vector<double> tmp;
-        for(int j = 0; j < 2; j++){
-            tmp.push_back(j);
-        }
-        joints.push_back(tmp);
-    }
     if(!m_fromRemote) remoteUpdate(0);
     m_fromRemote = false;
 }
