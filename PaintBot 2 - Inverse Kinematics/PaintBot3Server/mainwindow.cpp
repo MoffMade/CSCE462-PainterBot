@@ -147,22 +147,26 @@ void MainWindow::setUIEnabled(bool val)
 /***************************************************************/
 
 //update based on link control
-void MainWindow::linkUpdate()
+void MainWindow::update(std::vector<std::vector<double> > joints, std::vector<double> link_values)
 {
-    //kinematics calls
-    //std::vector<std::vector<double> > joints = f_kin_solver(m_link1Value, m_link2Value, m_link3Value);
-    //std::vector<double> link_values = getLinkValues();
-
     //set X and Y values
-    //m_XValue = joints[3][0];
-    //m_YValue = joints[3][1];
+    m_XValue = joints[3][0];
+    m_YValue = joints[3][1];
 
     //set new link values
-    //m_link1Value = link_values[0];
-    //m_link2Value = link_values[1];
-    //m_link3Value = link_values[3];
+    m_link1Value = link_values[0];
+    m_link2Value = link_values[1];
+    m_link3Value = link_values[3];
 
     //set link positions
+    m_link1->setLine(joints[0][0], joints[0][1], joints[1][0], joints[1][1]);
+    m_link2->setLine(joints[1][0], joints[1][1], joints[2][0], joints[2][1]);
+    m_link3->setLine(joints[2][0], joints[2][1], joints[3][0], joints[3][1]);
+
+    //check paint flag
+    if(m_paint_flag){
+        m_scene->addEllipse(joints[3][0], joints[3][1], 10, 10, m_link_pen);
+    }
 
     //set sliders
     ui->horizontalSlider->setValue(qRound(m_link1Value));
@@ -178,9 +182,21 @@ void MainWindow::linkUpdate()
     m_fromRemote = false;
 }
 
+void MainWindow::linkUpdate()
+{
+    //kinematics calls: replace with appropriate functions
+    std::vector<std::vector<double> > joints = FAKEsolver(m_link1Value, m_link2Value, m_link3Value);
+    std::vector<double> link_values = FAKEgetLinkValues();
+    update(joints, link_values);
+}
+
 //update based on world control
 void MainWindow::worldUpdate()
 {
+    //kinematics calls: replace with appropriate functions
+    std::vector<std::vector<double> > joints = FAKEsolver(m_XValue, m_YValue, m_link3Value);
+    std::vector<double> link_values = FAKEgetLinkValues();
+    update(joints, link_values);
 
 }
 
@@ -304,4 +320,29 @@ void MainWindow::on_pushButton_4_clicked()
     m_delay = ui->lineEdit->text().toInt();
     if(m_delay == 0) setUIEnabled(true);
     else setUIEnabled(false);
+}
+
+std::vector<std::vector<double> > MainWindow::FAKEsolver(double l1, double l2, double l3)
+{
+    // Random number between low and high
+    //return qrand() % ((high + 1) - low) + low;
+
+    std::vector<std::vector<double> > joints;
+    for(int i = 0; i < 4; i++){
+        std::vector<double> tmp;
+        for(int j = 0; j < 2; j++){
+            tmp.push_back(qrand() % ((100 + 1) - 0) + 0);
+        }
+        joints.push_back(tmp);
+    }
+    return joints;
+}
+
+std::vector<double> MainWindow::FAKEgetLinkValues()
+{
+    std::vector<double> values;
+    values.push_back(m_link1Value);
+    values.push_back(m_link2Value);
+    values.push_back(m_link3Value);
+    return values;
 }

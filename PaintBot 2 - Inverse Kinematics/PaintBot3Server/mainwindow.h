@@ -5,6 +5,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QGraphicsScene>
+#include <QGraphicsLineItem>
 
 
 
@@ -52,10 +53,13 @@ private:
     double m_YValue;
 
     //updates robot display based kinematics module
+    void update(std::vector<std::vector<double> > joints, std::vector<double> link_values);
     void linkUpdate();
     void worldUpdate();
     void remoteUpdate(double linkOrWorld);
     void setUIEnabled(bool val);
+    std::vector<std::vector<double> > FAKEsolver(double l1, double l2, double l3);
+    std::vector<double> FAKEgetLinkValues();
 
 private slots:
     void acceptConnection();
