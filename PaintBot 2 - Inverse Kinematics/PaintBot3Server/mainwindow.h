@@ -31,16 +31,13 @@ private:
     int m_delay;
     bool m_paint_flag;
 
-    //updates robot display based on link control changes
-    void linkUpdate(double z, double theta1, double theta2);
+    //updates robot display based kinematics module
+    void linkUpdate(vector<vector< double> > joints);
 
     //updates dh-parameter values
     void updateLink1(double z);
     void updateLink2(double theta);
     void updateLink3(double theta);
-
-    //updates robot display based on world control changes
-    void worldUpdate(double x, double y);
 
     //updates end-effector x and y locations
     void updateX(double x);
@@ -48,6 +45,9 @@ private:
 
     //updates simulated delay
     void updateDelay(int seconds);
+
+    //sends update data to client
+    void remoteUpdate(vector<vector<double> > joints);
 
 private slots:
     void acceptConnection();

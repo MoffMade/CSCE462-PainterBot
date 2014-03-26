@@ -47,7 +47,7 @@ void MainWindow::readReady()
 //update functions
 /***************************************************************/
 
-void MainWindow::linkUpdate(double z, double theta1, double theta2)
+void MainWindow::linkUpdate(vector<vector<double> > joints)
 {
 
 }
@@ -64,11 +64,6 @@ void MainWindow::updateLink2(double theta)
 
 
 void MainWindow::updateLink3(double theta)
-{
-
-}
-
-void MainWindow::worldUpdate(double x, double y)
 {
 
 }
@@ -178,4 +173,19 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_4_clicked()
 {
     m_delay = ui->lineEdit->text().toInt();
+}
+
+//remote update
+void MainWindow::remoteUpdate(vector<vector<double> > joints)
+{
+    if(m_delay != 0){
+        QString data;
+        for(int i = 0; i < 4; i++){
+            for(int j = 0; j < 2; j++){
+                data.append(QString::number(joints[i][j]));
+            }
+        }
+        data.append("\n");
+        m_socket->write(data);
+        m_socket->flush();
 }
