@@ -1,5 +1,5 @@
 //warning: the stuff below is HIDEOUS
-
+#define WORLD_DELTA 1
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
@@ -41,12 +41,12 @@ MainWindow::MainWindow(QWidget *parent) :
     m_link_pen.setColor(Qt::blue);
     m_link2 = m_scene->addLine(0,150,0,250,m_link_pen);   //100 pixels long
     m_link_pen.setColor(Qt::red);
-    m_link3 = m_scene->addLine(0,250,0,315, m_link_pen);  //75 pixels long
+    m_link3 = m_scene->addLine(0,250,0,325, m_link_pen);  //75 pixels long
     m_link_pen.setColor(Qt::yellow);
 
     //set end effector position
     end_effector_position.setX(0);
-    end_effector_position.setY(315);
+    end_effector_position.setY(325);
 
     //set end effector coordinate labels
     ui->label_9->setText(QString::number(end_effector_position.x()));
@@ -229,84 +229,84 @@ void MainWindow::on_horizontalSlider_3_sliderMoved(int position)
 //World Control
 void MainWindow::on_pushButton_10_clicked()
 {
-    double end_x=end_effector_position.x() + 10;
+    double end_x=end_effector_position.x() + WORLD_DELTA;
     double end_y=end_effector_position.y();
     if( pow((end_x-300),2)+pow((end_y-150),2)<=pow(175,2) || pow(end_x,2)+pow((end_y-150),2)<=pow(175,2) || (end_x>=0&&end_x<=300&&end_y>=-25&&end_y<=325)) {
         vector<vector<double> > points;
         end_effector_position.setX(end_x);
         points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y());
         updateRobot(points);
-        link1_position = points[0][0];
-        link2_angle = (3.1415926535/2)-qAtan2((points[2][1] - points[1][1]), (points[2][0] - points[1][0]));
-        link3_angle = qAtan2((points[3][1] - points[2][1]), (points[3][0] - points[2][0])) - qAtan2((points[2][1] - points[1][1]), (points[2][0] - points[1][0]));
+        link1_position = solver.getD();
+        link2_angle = solver.getTheta2();
+        link3_angle = solver.getTheta3();
         ui->label_4->setText(QString::number(link1_position));
-        ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
-        ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
+        ui->label_6->setText(QString::number(fmod(360+rad2degree(link2_angle),360)));
+        ui->label_7->setText(QString::number(fmod(360+rad2degree(link3_angle),360)));
         ui->horizontalSlider->setValue(link1_position);
-        ui->horizontalSlider_2->setValue(link2_angle);
-        ui->horizontalSlider_2->setValue(link3_angle);
+        ui->horizontalSlider_2->setValue(fmod(360+rad2degree(link2_angle),360));
+        ui->horizontalSlider_2->setValue(fmod(360+rad2degree(link3_angle),360));
     }
 }
 
 void MainWindow::on_pushButton_11_clicked()
 {
-    double end_x=end_effector_position.x() - 10;
+    double end_x=end_effector_position.x() - WORLD_DELTA;
     double end_y=end_effector_position.y();
     if( pow((end_x-300),2)+pow((end_y-150),2)<=pow(175,2) || pow(end_x,2)+pow((end_y-150),2)<=pow(175,2) || (end_x>=0&&end_x<=300&&end_y>=-25&&end_y<=325)) {
         vector<vector<double> > points;
         end_effector_position.setX(end_x);
         points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y());
         updateRobot(points);
-        link1_position = points[0][0];
-        link2_angle = (3.1415926535/2)-qAtan2((points[2][1] - points[1][1]), (points[2][0] - points[1][0]));
-        link3_angle = qAtan2((points[3][1] - points[2][1]), (points[3][0] - points[2][0])) - qAtan2((points[2][1] - points[1][1]), (points[2][0] - points[1][0]));
+        link1_position = solver.getD();
+        link2_angle = solver.getTheta2();
+        link3_angle = solver.getTheta3();
         ui->label_4->setText(QString::number(link1_position));
-        ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
-        ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
+        ui->label_6->setText(QString::number(fmod(360+rad2degree(link2_angle),360)));
+        ui->label_7->setText(QString::number(fmod(360+rad2degree(link3_angle),360)));
         ui->horizontalSlider->setValue(link1_position);
-        ui->horizontalSlider_2->setValue(link2_angle);
-        ui->horizontalSlider_2->setValue(link3_angle);
+        ui->horizontalSlider_2->setValue(fmod(360+rad2degree(link2_angle),360));
+        ui->horizontalSlider_2->setValue(fmod(360+rad2degree(link3_angle),360));
     }
 }
 
 void MainWindow::on_pushButton_12_clicked()
 {
     double end_x=end_effector_position.x();
-    double end_y=end_effector_position.y()+10;
+    double end_y=end_effector_position.y()+WORLD_DELTA;
     if( pow((end_x-300),2)+pow((end_y-150),2)<=pow(175,2) || pow(end_x,2)+pow((end_y-150),2)<=pow(175,2) || (end_x>=0&&end_x<=300&&end_y>=-25&&end_y<=325)) {
         vector<vector<double> > points;
         end_effector_position.setY(end_y);
         points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y());
         updateRobot(points);
-        link1_position = points[0][0];
-        link2_angle = (3.1415926535/2)-qAtan2((points[2][1] - points[1][1]), (points[2][0] - points[1][0]));
-        link3_angle = qAtan2((points[3][1] - points[2][1]), (points[3][0] - points[2][0])) - qAtan2((points[2][1] - points[1][1]), (points[2][0] - points[1][0]));
+        link1_position = solver.getD();
+        link2_angle = solver.getTheta2();
+        link3_angle = solver.getTheta3();
         ui->label_4->setText(QString::number(link1_position));
-        ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
-        ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
+        ui->label_6->setText(QString::number(fmod(360+rad2degree(link2_angle),360)));
+        ui->label_7->setText(QString::number(fmod(360+rad2degree(link3_angle),360)));
         ui->horizontalSlider->setValue(link1_position);
-        ui->horizontalSlider_2->setValue(link2_angle);
-        ui->horizontalSlider_2->setValue(link3_angle);
+        ui->horizontalSlider_2->setValue(fmod(360+rad2degree(link2_angle),360));
+        ui->horizontalSlider_2->setValue(fmod(360+rad2degree(link3_angle),360));
     }
 }
 
 void MainWindow::on_pushButton_13_clicked()
 {
     double end_x=end_effector_position.x();
-    double end_y=end_effector_position.y()-10;
+    double end_y=end_effector_position.y()-WORLD_DELTA;
     if( pow((end_x-300),2)+pow((end_y-150),2)<=pow(175,2) || pow(end_x,2)+pow((end_y-150),2)<=pow(175,2) || (end_x>=0&&end_x<=300&&end_y>=-25&&end_y<=325)) {
         vector<vector<double> > points;
         end_effector_position.setY(end_y);
         points = solver.inverseSolver(end_effector_position.x(), end_effector_position.y());
         updateRobot(points);
-        link1_position = points[0][0];
-        link2_angle = (3.1415926535/2)-qAtan2((points[2][1] - points[1][1]), (points[2][0] - points[1][0]));
-        link3_angle = qAtan2((points[3][1] - points[2][1]), (points[3][0] - points[2][0])) - qAtan2((points[2][1] - points[1][1]), (points[2][0] - points[1][0]));
+        link1_position = solver.getD();
+        link2_angle = solver.getTheta2();
+        link3_angle = solver.getTheta3();
         ui->label_4->setText(QString::number(link1_position));
-        ui->label_6->setText(QString::number(180*link2_angle/3.1415926535));
-        ui->label_7->setText(QString::number(180*link3_angle/3.1415926535));
+        ui->label_6->setText(QString::number(fmod(360+rad2degree(link2_angle),360)));
+        ui->label_7->setText(QString::number(fmod(360+rad2degree(link3_angle),360)));
         ui->horizontalSlider->setValue(link1_position);
-        ui->horizontalSlider_2->setValue(link2_angle);
-        ui->horizontalSlider_2->setValue(link3_angle);
+        ui->horizontalSlider_2->setValue(fmod(360+rad2degree(link2_angle),360));
+        ui->horizontalSlider_2->setValue(fmod(360+rad2degree(link3_angle),360));
     }
 }

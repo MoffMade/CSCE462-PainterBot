@@ -37,10 +37,14 @@ public:
     void printSolver();
     void printLinkPoints();
     void updateTMatrices();
+    double getD(){return DH_Parameters[0].d;}
+    double getTheta2(){return DH_Parameters[2].theta;}
+    double getTheta3(){return DH_Parameters[3].theta;}
     vector<vector<double> > updateArmLinks();
     vector<vector<double> > updateTheta(double newTheta, int sub); //Returns a 2D vector with a X,Y pair as each row.
     vector<vector<double> > updateThetas(double newTheta2, double newTheta3);
     vector<vector<double> > updateBaseSlider(double newSliderPos);
+    vector<vector<double> > forwardSolver(double newSliderPos, double newTheta2, double newTheta3);
     vector<vector<double> > inverseSolver(double end_x, double end_y); //Takes X and Y coord of requested end effector position and upadtes the DH parameters
 };
 
