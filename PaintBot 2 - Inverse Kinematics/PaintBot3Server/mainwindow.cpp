@@ -2,6 +2,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+//#include "kinematics.h"
 
 class SleeperThread : public QThread
 {
@@ -14,7 +15,12 @@ public:
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    L0(0,0,0,0),            // d is variable (prismatic)
+    L1(90,150,0,0),         // non-variable transform
+    L2(0,100,0,0),          // theta is variable (revolute)
+    L3(0,75,0,0),
+    m_solver(L0, L1, L2, L3)
 {
     //initialize link values, xy positions
     m_link1Value = 0;
@@ -31,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_dialog, SIGNAL(runClient(QString,qint16)), this, SLOT(onRunClient(QString,qint16)));
     m_dialog->show();
     m_server = new QTcpServer(this);
+    m_solver = kin_solver(L0, L1, L2, L3);
     m_socket = 0;
 
     //generate scene
@@ -201,8 +208,12 @@ void MainWindow::update(std::vector<std::vector<double> > joints, std::vector<do
 void MainWindow::linkUpdate()
 {
     //kinematics calls: replace with appropriate functions
-    std::vector<std::vector<double> > joints = FAKEsolver(m_link1Value, m_link2Value, m_link3Value);
-    std::vector<double> link_values = FAKEgetLinkValues();
+    std::vector<std::vector<double> > joints = m_solver.forwardSolver(m_link1Value, m_link2Value, m_link3Value);
+    std::vector<double> link_values;
+    link_values.push_back(m_solver.getD());
+    link_values.push_back(m_solver.getTheta2());
+    link_values.push_back(m_solver.getTheta3());
+
     update(joints, link_values);
 }
 
@@ -210,8 +221,11 @@ void MainWindow::linkUpdate()
 void MainWindow::worldUpdate()
 {
     //kinematics calls: replace with appropriate functions
-    std::vector<std::vector<double> > joints = FAKEsolver(m_XValue, m_YValue, m_link3Value);
-    std::vector<double> link_values = FAKEgetLinkValues();
+    std::vector<std::vector<double> > joints = m_solver.inverseSolver(m_XValue, m_YValue);
+    std::vector<double> link_values;
+    link_values.push_back(m_solver.getD());
+    link_values.push_back(m_solver.getTheta2());
+    link_values.push_back(m_solver.getTheta3());
     update(joints, link_values);
 
 }

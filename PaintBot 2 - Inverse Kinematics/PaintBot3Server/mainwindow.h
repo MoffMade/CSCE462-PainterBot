@@ -8,6 +8,7 @@
 #include <QGraphicsLineItem>
 
 #include "dialog.h"
+#include "kinematics.h"
 
 const int MAXZ = 300;
 const int MAXANGLE = 359;
@@ -39,6 +40,8 @@ private:
     QPen m_link_pen;
     QGraphicsScene *m_scene;
     QGraphicsLineItem *m_link1, *m_link2, *m_link3;
+    kin_solver m_solver;
+    DH_Param L0, L1, L2, L3;
 
     int m_delay;
     bool m_paint_flag;

@@ -14,10 +14,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    dialog.cpp
+    dialog.cpp \
+    kinematics.cpp \
+    forwardKinematics.cpp
 
 HEADERS  += mainwindow.h \
-    dialog.h
+    dialog.h \
+    kinematics.h \
+    forwardKinematics.h
 
 FORMS    += mainwindow.ui \
     dialog.ui
