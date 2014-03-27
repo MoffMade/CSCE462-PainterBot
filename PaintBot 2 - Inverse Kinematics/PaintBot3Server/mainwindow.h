@@ -7,10 +7,10 @@
 #include <QGraphicsScene>
 #include <QGraphicsLineItem>
 
-
-
 #include "dialog.h"
 
+const int MAXZ = 300;
+const int MAXANGLE = 359;
 
 namespace Ui {
 class MainWindow;

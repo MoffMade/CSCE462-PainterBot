@@ -1,5 +1,16 @@
+#include <QThread>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+class SleeperThread : public QThread
+{
+public:
+    static void msleep(unsigned long msecs)
+    {
+        QThread::msleep(msecs);
+    }
+};
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -95,6 +106,7 @@ void MainWindow::acceptConnection()
 void MainWindow::readReady()
 {
     //read socket
+    if(m_isServer) SleeperThread::msleep(m_delay * 1000);
     while(m_socket->canReadLine()){
         char d[2000];
         m_socket->readLine(d, 2000);
@@ -109,6 +121,8 @@ void MainWindow::readReady()
         m_XValue = list.at(3).toDouble();
         m_YValue = list.at(4).toDouble();
         double linkOrWorld = list.at(5).toDouble();
+        m_paint_flag = list.at(6).toInt();
+        ui->pushButton->setChecked(m_paint_flag);
 
         //call update function
         m_fromRemote = true;
@@ -156,7 +170,7 @@ void MainWindow::update(std::vector<std::vector<double> > joints, std::vector<do
     //set new link values
     m_link1Value = link_values[0];
     m_link2Value = link_values[1];
-    m_link3Value = link_values[3];
+    m_link3Value = link_values[2];
 
     //set link positions
     m_link1->setLine(joints[0][0], joints[0][1], joints[1][0], joints[1][1]);
@@ -177,6 +191,8 @@ void MainWindow::update(std::vector<std::vector<double> > joints, std::vector<do
     ui->label_4->setText(QString::number(qRound(m_link1Value)));
     ui->label_6->setText(QString::number(qRound(m_link2Value)));
     ui->label_7->setText(QString::number(qRound(m_link3Value)));
+    ui->label_9->setText(QString::number(qRound(m_XValue)));
+    ui->label_11->setText(QString::number(qRound(m_YValue)));
 
     if(!m_fromRemote) remoteUpdate(0);
     m_fromRemote = false;
@@ -217,6 +233,8 @@ void MainWindow::remoteUpdate(double linkOrWorld)
             data.append(QString::number(m_YValue));
             data.append(" ");
             data.append(QString::number(linkOrWorld));
+            data.append(" ");
+            data.append(QString::number(m_paint_flag));
             data.append("\n");
             m_socket->write(data.toStdString().c_str());
             m_socket->flush();
@@ -233,14 +251,20 @@ void MainWindow::remoteUpdate(double linkOrWorld)
 //link 1
 void MainWindow::on_pushButton_2_clicked()
 {
-    m_link1Value++;
-    linkUpdate();
+    if(m_link1Value + 1 <= MAXZ)
+    {
+        m_link1Value++;
+        linkUpdate();
+    }
 }
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    m_link1Value--;
-    linkUpdate();
+    if(m_link1Value - 1 >= 0)
+    {
+        m_link1Value--;
+        linkUpdate();
+    }
 }
 
 void MainWindow::on_horizontalSlider_sliderMoved(int position)
@@ -252,55 +276,77 @@ void MainWindow::on_horizontalSlider_sliderMoved(int position)
 //link 2
 void MainWindow::on_pushButton_6_clicked()
 {
-
+    if(m_link2Value + 1 <= MAXANGLE)
+    {
+        m_link2Value++;
+        linkUpdate();
+    }
 }
 
 void MainWindow::on_pushButton_7_clicked()
 {
-
+    if(m_link2Value - 1 >= 0)
+    {
+        m_link2Value--;
+        linkUpdate();
+    }
 }
 
 void MainWindow::on_horizontalSlider_2_sliderMoved(int position)
 {
-
+    m_link2Value = position;
+    linkUpdate();
 }
 
 //link 3
 void MainWindow::on_pushButton_8_clicked()
 {
-
+    if(m_link3Value + 1 >= MAXANGLE)
+    {
+        m_link3Value++;
+        linkUpdate();
+    }
 }
 
 void MainWindow::on_pushButton_9_clicked()
 {
-
+    if(m_link3Value - 1 >= 0)
+    {
+        m_link3Value--;
+        linkUpdate();
+    }
 }
 
 void MainWindow::on_horizontalSlider_3_sliderMoved(int position)
 {
-
+    m_link3Value = position;
+    linkUpdate();
 }
 
 //X position
 void MainWindow::on_pushButton_10_clicked()
 {
-
+    m_XValue++;
+    worldUpdate();
 }
 
 void MainWindow::on_pushButton_11_clicked()
 {
-
+    m_XValue--;
+    worldUpdate();
 }
 
 //Y position
 
 void MainWindow::on_pushButton_12_clicked()
 {
-
+    m_YValue++;
+    worldUpdate();
 }
 void MainWindow::on_pushButton_13_clicked()
 {
-
+    m_YValue--;
+    worldUpdate();
 }
 
 //paint flag
