@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <stdlib.h>
-#include "forwardKinematics.h"
+#include "../forwardKinematics.h"
 #define PI 3.141592653589793238463
 
 using namespace std;

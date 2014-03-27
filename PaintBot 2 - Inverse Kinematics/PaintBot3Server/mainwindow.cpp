@@ -2,7 +2,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-//#include "kinematics.h"
+#include "kinematics.h"
 
 class SleeperThread : public QThread
 {
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_link2Value = 0;
     m_link3Value = 0;
     m_XValue = 0;
-    m_YValue = 0;
+    m_YValue = 325;
     m_paint_flag = false;
     m_delay = 0;
     m_fromRemote = false;
@@ -72,6 +72,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //this line flips the y axis; this means that (0,0) is at the bottom left corner instead of top left.
     ui->graphicsView->scale(0.7,-0.7);
     ui->graphicsView->setScene(m_scene);
+    worldUpdate();
 }
 
 MainWindow::~MainWindow()
