@@ -78,7 +78,7 @@ void MainWindow::onRunServer(qint16 port_number)
     m_isServer = true;
     m_port_number = port_number;
     connect(m_server, SIGNAL(newConnection()), this, SLOT(acceptConnection()));
-    if (!m_server->listen(QHostAddress::LocalHost, m_port_number)) qDebug("SERVER: %s", "Could not start Server");
+    if (!m_server->listen(QHostAddress::Any, m_port_number)) qDebug("SERVER: %s", "Could not start Server");
     show();
     m_dialog->hide();
 }
