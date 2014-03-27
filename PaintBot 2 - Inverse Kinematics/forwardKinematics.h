@@ -51,8 +51,8 @@ public:
 	double get(int r, int c) const;
 	int getOrg() const;
 	int getDes() const;
-	void setOrg(int nOrg){origin_frame=nOrg;};
-	void setDes(int nDes){destination_frame=nDes;};
+    void setOrg(int nOrg){origin_frame=nOrg;}
+    void setDes(int nDes){destination_frame=nDes;}
 	int set(double val, int r, int c);
 	void T_Mat_multiply(const T_Matrix A, const T_Matrix B);
 	vector<double> pointTransform(vector<double> org_pos);
@@ -88,7 +88,7 @@ public:
 	void updateTMatrices();
 	vector<vector<double> > updateArmLinks();
 	vector<vector<double> > updateTheta(double newTheta, int sub); //Returns a 2D vector with a X,Y pair as each row.
-	vector<vector<double> > updateBaseSlider(double newSliderPos);
+    vector<vector<double> > updateBaseSlider(double newSliderPos);
 };
 
 

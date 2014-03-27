@@ -102,22 +102,7 @@ vector<vector<double> > kin_solver::updateTheta(double newTheta, int sub){
     }
     return XYpositions;
 };
-vector<vector<double> > kin_solver::updateThetas(double newTheta2, double newTheta3){
-    vector<vector<double> > linkPositions, XYpositions;
-    DH_Parameters[2].theta=degree2rad(newTheta2);
-    DH_Parameters[3].theta=degree2rad(newTheta3);
-    updateTMatrices();
-    linkPositions=updateArmLinks();		//Get (X,Y,Z) positions for link points.
-    vector<double> temp;
-    //Change the points from (X,Y,Z) to (Z, X) points for use in the GUI XY plane
-    for(int i=0; i<linkPositions.size(); i++){
-        temp.clear();
-        temp.push_back(linkPositions[i][2]);	//Z value of position to first parameter
-        temp.push_back(linkPositions[i][0]);	//X value of position to second parameter
-        XYpositions.push_back(temp);			//Store (Z,X) position to XYpositions to return to the GUI
-    }
-    return XYpositions;
-};
+
 vector<vector<double> >  kin_solver::updateBaseSlider(double newSliderPos){
     vector<vector<double> > linkPositions, XYpositions;
     if(newSliderPos>=0&&newSliderPos<=300){
@@ -144,88 +129,98 @@ vector<vector<double> >  kin_solver::updateBaseSlider(double newSliderPos){
     return XYpositions;
 };
 
-vector<vector<double> > kin_solver::inverseSolver(double end_x, double end_y){
-    //Change from graphics XY plane to ZX reference frame of robot
+vector<vector<double> > kin_solver::updateThetas(double newTheta2, double newTheta3){
     vector<vector<double> > linkPositions, XYpositions;
-    cout<<"Got "<<end_x<<" and "<<end_y<<endl;
+    DH_Parameters[2].theta=degree2rad(newTheta2);
+    DH_Parameters[3].theta=degree2rad(newTheta3);
+    updateTMatrices();
+    linkPositions=updateArmLinks();		//Get (X,Y,Z) positions for link points.
+    vector<double> temp;
+    //Change the points from (X,Y,Z) to (Z, X) points for use in the GUI XY plane
+    for(int i=0; i<linkPositions.size(); i++){
+        temp.clear();
+        temp.push_back(linkPositions[i][2]);	//Z value of position to first parameter
+        temp.push_back(linkPositions[i][0]);	//X value of position to second parameter
+        XYpositions.push_back(temp);			//Store (Z,X) position to XYpositions to return to the GUI
+    }
+    return XYpositions;
+};
+
+vector<vector<double> > kin_solver::forwardSolver(double newSliderPos, double newTheta2, double newTheta3){
+    vector<vector<double> > linkPositions, XYpositions;
+    //Uses functions from forward kinematic solver to update the links based on forward kinematic model
+    updateBaseSlider(newSliderPos);
+    XYpositions=updateThetas(newTheta2,newTheta3);
+    return XYpositions;
+};
+
+vector<vector<double> > kin_solver::inverseSolver(double end_x, double end_y){
+    vector<vector<double> > linkPositions, XYpositions;
     //Check range:  (x-300)^2+(y-150)^2<=175^2 || x^2+(y-150)^2<=175^2 || (x>=0&&x<=300&&y>=-25&&y<=325))
     if( pow((end_x-300),2)+pow((end_y-150),2)<=pow(175,2) || pow(end_x,2)+pow((end_y-150),2)<=pow(175,2) || (end_x>=0&&end_x<=300&&end_y>=-25&&end_y<=325)) {
-        double theta2, theta3, d_length;
-        //requested (z,x) position for end effector
-        double z_end=end_x;
-        double x_end=end_y;
+        double theta2, theta3, d_length, phi, psi;
         //arm link lengths, used in calculations
         double l1, l2, l3;
         l1=150;
         l2=100;
         l3=75;
         double curr_d=DH_Parameters[0].d;
+        //(x-d)^2+(y-l1)^2<=(l2+l3)^2 - outer reachable circle equation
+        //(x-d)^2+(y-l1)^2>=(l2-l3)^2 - inner reachable circle equation
+        //(end_x, end_y) must be within outer circle and outside inner circle
 
+
+        //(l2-l3)^2<=(x-d)^2+(y-l1)^2<=(l2+l3)^2
         //Find new d_length
-        if(z_end<curr_d){
-            d_length=curr_d-10;
-        }
-        else if(z_end>curr_d){
-            d_length=curr_d+10;
+        //Check to make sure within reachable space without moving D
+        if(((pow(end_x-curr_d,2)+pow(end_y-l1,2))>pow(l2+l3,2))||((pow(end_x-curr_d,2)+pow(end_y-l1,2))<pow(l2-l3,2))){
+            //change d_length to include (end_x, end_y) in reachable circle
+            d_length=curr_d;
+            while(((pow(end_x-d_length,2)+pow(end_y-l1,2))>pow(l2+l3,2))||((pow(end_x-d_length,2)+pow(end_y-l1,2))<pow(l2-l3,2))){
+                if(end_x<curr_d){
+                    d_length-=1;
+                }
+                else
+                    d_length+=1;
+            }
         }
         else{
+            //(end_x, end_y) is already reachable
             d_length=curr_d;
         }
         if(d_length<0){ d_length=0;}
         if(d_length>300){ d_length=300;}
 
-        //Find theta3 using law of cosines between the end of the prismatic joint and the desired end effector position
-        double theta3_arg=(pow(l2,2)+pow(l3,2)-pow(z_end-d_length,2)-pow(x_end-l1,2))/(2*l2*l3);
-        if(theta3_arg>=-1&&theta3_arg<=1){
-            theta3=PI-acos(theta3_arg);
-        }
-        else{
-            if(theta3_arg<-1) theta3=PI-PI;
-            else theta3=PI-0;
-        }
+        //Magnitudes of vectors from (d,0) to (x,y) and (d, L1) to (x,y)
+        //Used in theta3 and phi calculations
+        double r=sqrt(pow(end_x-d_length,2)+pow(end_y-l1,2));
+        double b=sqrt(pow(end_x-d_length,2)+pow(end_y,2));
 
-        //Find theta2 by finding alpha across from the vector (d_length,0) to (z_end, x_end) in the triangle formed with L1 and the vector
-        // (d_length, L1) to (z_end, x_end) and beta across from L3 in the triangle formed with L2 and the vector (d_length, L1) to (z_end, x_end)
-        //vec is the magnitude of vector (d_length, L1) to (z_end, x_end)
-        double vec= sqrt(pow(z_end-d_length,2)+pow(x_end-l1,2));
-        double alpha, beta;
-        double alpha_arg=(pow(x_end-l1,2)+pow(l1,2)-pow(x_end,2))/(2*l1*vec);
-        if(alpha_arg>=-1&&alpha_arg<=1){
-            alpha=acos(alpha_arg);
-        }
-        else{
-            if(alpha_arg<-1) alpha=PI;
-            else alpha=0;
-        }
-        double beta_arg=(pow(vec,2)+pow(l2,2)-pow(l3,2))/(2*l2*vec);
-        if(beta_arg>=-1&&beta_arg<=1){
-            beta=acos(beta_arg);
-        }
-        else{
-            if(beta_arg<-1) beta=PI;
-            else beta=0;
-        }
-        theta2=PI+beta-alpha;
-cout<<"Theta3 Arg: "<<theta3_arg<<" Alpha Arg: "<<alpha_arg<<" Beta Arg: "<<beta_arg<<endl;
+        double theta3_arg=(pow(r,2)-pow(l2,2)-pow(l3,2))/(2*l2*l3);
+        if(theta3_arg<-1){theta3_arg=-1;}
+        else if(theta3_arg>1){theta3_arg=1;}
+        theta3= acos(theta3_arg);
 
-        //Shift into 0<=theta<2*PI range
+        //determine unique theta2 based on theta3
+        double phi_arg=(pow(l1,2)+pow(r,2)-pow(b,2))/(2*l1*r);
+        //ensure acos range is met (small rounding errors in calc can cause values +-1 +- 1e-14
+        if(phi_arg<-1){phi_arg=-1;}
+        else if(phi_arg>1){phi_arg=1;}
 
-        if(theta2<0)
-            theta2=2*PI-fmod(theta2, 2*PI);
-        if(theta3<0)
-            theta3=2*PI-fmod(theta3, 2*PI);
+        phi=acos(phi_arg);
+        psi=atan2((l3*sin(theta3)),(l2+l3*cos(theta3)));
 
-        cout<<"Inverse solution- "<<"D: "<<d_length<<" theta2: "<<rad2degree(theta2)<<" theta3: "<<rad2degree(theta3)<<endl;
+        if(end_x>=d_length){
+            theta2=PI-(psi+phi);
+        }
+        else
+            theta2=PI-(psi-phi);
 
-        updateBaseSlider(d_length);
-        XYpositions=updateThetas(rad2degree(theta2),rad2degree(theta3));
-        /*
-        updateTheta(fmod(theta2,360),2);
-        XYpositions=updateTheta(fmod(theta3,360),3);
-        */
+        //Update Links with new joint values
+        XYpositions=forwardSolver(d_length, fmod(rad2degree(theta2),360), fmod(rad2degree(theta3),360));
     }
     else{
-        cout<<"Invalid end effector position, must be within reachable workspace; no change in position."<<endl;
+        cout<<"Invalid position, must be within reachable workspace; no change in position."<<endl;
         linkPositions.push_back(Link0.getStart());
         linkPositions.push_back(Link1.getStart());
         linkPositions.push_back(Link2.getStart());
