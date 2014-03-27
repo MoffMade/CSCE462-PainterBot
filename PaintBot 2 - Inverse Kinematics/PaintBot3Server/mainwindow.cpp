@@ -212,8 +212,8 @@ void MainWindow::linkUpdate()
     std::vector<std::vector<double> > joints = m_solver.forwardSolver(m_link1Value, m_link2Value, m_link3Value);
     std::vector<double> link_values;
     link_values.push_back(m_solver.getD());
-    link_values.push_back(m_solver.getTheta2());
-    link_values.push_back(m_solver.getTheta3());
+    link_values.push_back(rad2degree(m_solver.getTheta2()));
+    link_values.push_back(rad2degree(m_solver.getTheta3()));
 
     update(joints, link_values);
 }
@@ -225,8 +225,8 @@ void MainWindow::worldUpdate()
     std::vector<std::vector<double> > joints = m_solver.inverseSolver(m_XValue, m_YValue);
     std::vector<double> link_values;
     link_values.push_back(m_solver.getD());
-    link_values.push_back(m_solver.getTheta2());
-    link_values.push_back(m_solver.getTheta3());
+    link_values.push_back(rad2degree(m_solver.getTheta2()));
+    link_values.push_back(rad2degree(m_solver.getTheta3()));
     update(joints, link_values);
 
 }
