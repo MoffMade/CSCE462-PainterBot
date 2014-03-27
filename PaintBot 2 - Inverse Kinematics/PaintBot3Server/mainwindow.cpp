@@ -174,9 +174,9 @@ void MainWindow::update(std::vector<std::vector<double> > joints, std::vector<do
     ui->horizontalSlider_3->setValue(qRound(m_link3Value));
 
     //set labels
-    ui->label_4->setText(QString::number(m_link1Value));
-    ui->label_6->setText(QString::number(m_link2Value));
-    ui->label_7->setText(QString::number(m_link3Value));
+    ui->label_4->setText(QString::number(qRound(m_link1Value)));
+    ui->label_6->setText(QString::number(qRound(m_link2Value)));
+    ui->label_7->setText(QString::number(qRound(m_link3Value)));
 
     if(!m_fromRemote) remoteUpdate(0);
     m_fromRemote = false;
